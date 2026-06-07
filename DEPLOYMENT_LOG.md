@@ -34,5 +34,18 @@ This document tracks the deployment process, issues encountered, and solutions a
 - **Problem**: `npm install` failed during the compilation of `better-sqlite3` because the `make` command was missing on the VPS.
 - **Solution**: Installed `build-essential` on the VPS using `sudo apt-get install -y build-essential`.
 
-### 5. Deployment Continuation
-- Proceeding with `npm install` and `npm run build` on the VPS.
+### 5. New Deployment (2026-06-07)
+- **Status**: In Progress
+- **Action**: Deploying the latest version `amurscans-vps.tar.gz` from the GitHub repository.
+- **Steps Taken**:
+    1. Accessed VPS and verified SSH connectivity.
+    2. Backed up the existing `/var/www/amurscans` to `/home/amurscans/amurscans_backup_before_new_deploy`.
+    3. Transferred the new `amurscans-vps.tar.gz` to the VPS.
+    4. Extracted the new files to `/var/www/amurscans/` using `rsync` for a clean sync.
+    5. Triggered `npm install` to update dependencies.
+
+### 6. Issue: `npm install` Timeout
+- **Problem**: The `npm install` process is taking a long time, leading to terminal timeouts.
+- **Action**: Running `npm install` in a persistent session to ensure completion.
+- **Next Steps**: Verify the build, run migrations, and fix the database rendering issue (mangas/chapters not showing).
+
