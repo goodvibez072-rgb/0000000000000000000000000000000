@@ -64,3 +64,11 @@ This document tracks the deployment process, issues encountered, and solutions a
 - **Documentation**: All steps have been logged in `DEPLOYMENT_LOG.md`.
 - **Repository**: Pushing the updated log to the GitHub repository for future reference.
 - **Next Steps**: Monitor the site for any production-specific issues and ensure the admin can log in.
+
+### 9. Final Verification & Domain Status (2026-06-07)
+- **Domain**: amurscans.com
+- **Cloudflare**: Verified that amurscans.com is resolving to Cloudflare IPs and the site is accessible via HTTPS.
+- **Nginx Configuration**: Confirmed Nginx is correctly configured as a reverse proxy for the Node.js backend on port 3000 and serving static files from `/var/www/amurscans/dist/public`.
+- **SSL**: SSL is managed on the VPS via Let's Encrypt, which is compatible with Cloudflare's 'Full' or 'Full (Strict)' SSL settings.
+- **System Health**: The application is running stably, serving API requests and static content without errors.
+
