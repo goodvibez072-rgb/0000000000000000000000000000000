@@ -20,13 +20,18 @@
    - The application might be expecting a different schema or table names (e.g., `manga` vs `series`).
    - The `sqlite3` check failed when looking for a `manga` table.
 
-### Actions Taken
-- Successfully SSHed into the VPS.
-- Inspected running processes and listening ports.
-- Verified database location and basic content.
-- Cloned the GitHub repository for documentation.
+### Actions Taken (Updated June 7, 2026)
+- **Admin Password Reset**: Successfully reset the admin password to `Manga@Site2024!Secure99` and ensured the account has `owner` role and `isAdmin: 'true'`.
+- **Database Schema Audit**: Confirmed the database uses a `series` table (not `manga`). Found 4 series entries.
+- **Chapter Verification**: Confirmed at least one series has chapters in the database.
+- **Service Status**: Verified `amurscans.service` is running via systemd.
+- **CSRF Issue**: Identified CSRF token errors in logs which might be affecting logins from certain environments.
+
+### Issues Identified & Resolved
+1. **Admin Login**: Reset password via custom script. Verified user exists with correct role.
+2. **Manga Display (In Progress)**: API returns data, but frontend might be failing to render or expecting different flags.
 
 ### Next Steps
-- Investigate why the frontend is not displaying the manga even though the API seems to return data.
-- Verify the admin account status in the `users` table.
-- Check for any frontend-backend mismatches in table naming.
+- Fix the manga display issue by checking the flag matching (string vs boolean) in `storage.ts`.
+- Restart the service to apply any configuration changes.
+- Perform a full audit of all API endpoints.
