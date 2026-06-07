@@ -49,3 +49,18 @@ This document tracks the deployment process, issues encountered, and solutions a
 - **Action**: Running `npm install` in a persistent session to ensure completion.
 - **Next Steps**: Verify the build, run migrations, and fix the database rendering issue (mangas/chapters not showing).
 
+
+### 7. Deployment Resumed (2026-06-07)
+- **Action**: Resumed deployment after a session handover.
+- **Steps Taken**:
+    1. Verified the VPS state: the new code was present, but the build was incomplete or not verified.
+    2. Ran `npm run build` on the VPS to ensure the frontend and backend were correctly compiled.
+    3. Restarted the `amurscans` service.
+    4. Verified that the API is responding correctly with manga data from the database.
+    5. Confirmed Nginx is running and its configuration is valid.
+- **Status**: Successfully deployed and verified.
+
+### 8. Hand-off Finalization
+- **Documentation**: All steps have been logged in `DEPLOYMENT_LOG.md`.
+- **Repository**: Pushing the updated log to the GitHub repository for future reference.
+- **Next Steps**: Monitor the site for any production-specific issues and ensure the admin can log in.
