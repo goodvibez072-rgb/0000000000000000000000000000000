@@ -1,3 +1,21 @@
+## Progress Update - June 8, 2026
+
+### Issues Identified & Fixed:
+1. **Database Content:** The database on the VPS actually contains 4 series and 1 chapter, matching the reference version.
+2. **Manga Display:** Fixed an issue where manga were not showing on the homepage by updating the 'is_featured', 'is_trending', etc. flags to 'true' in the database.
+3. **Manga Data Corruption:** Fixed a JSON serialization issue in the 'genres' column for 'Tower of God : Urek Mazino'.
+4. **Admin Access:** Reset the admin password for 'admin' to 'Manga@Site2024!Secure99' using the provided script.
+5. **Site Configuration:** Updated 'site_name' in the settings table from 'MangaVerse Test' to 'AmourScans'.
+6. **Manga Freshness:** Updated 'created_at' and 'updated_at' for series and chapters to ensure they appear as 'New' on the site.
+
+### Ongoing Investigations:
+- **Authentication Failures:** Investigating why logins are failing despite correct credentials. Nginx logs show 'upstream prematurely closed connection' for /api/csrf-token and other endpoints.
+- **Session Issues:** Checking if session regeneration is causing the upstream closures.
+
+### Next Steps:
+- Verify login functionality.
+- Test all endpoints for stability.
+- Ensure all pages are loading correctly.
 # Progress Report - Manga Website Restoration
 
 ## Final Assessment (June 8, 2026)
