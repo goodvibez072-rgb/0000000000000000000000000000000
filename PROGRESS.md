@@ -5,31 +5,33 @@
 ### Status of Services
 - **Web Server**: Node.js application is running on port 3000.
 - **Database**: SQLite database found at `/var/www/amurscans/data/database.db`.
-- **Nginx**: Configured as a reverse proxy, but has its own HTTPS redirect which might conflict with the Node.js app's internal redirect.
-- **Manga Data**: 4 entries found in the `series` table. All have `true` for section flags (`is_featured`, etc.).
+- **Nginx**: Configured as a reverse proxy with HTTPS redirect.
+- **Manga Data**: 4 entries found in the `series` table. 1 entry has a chapter.
 
 ### Issues Identified
 1. **Manga Display**:
-   - The database contains a `series` table with 4 entries.
-   - The application expects `is_featured = "true"` (string) but the database might be returning booleans or the frontend might not be receiving them correctly.
-   - Logs show successful GET requests to `/api/sections/...` but the user reports no mangas are showing.
+   - The application expects `is_featured = "true"` (string) for section filtering.
+   - Database entries have `true` (boolean) for these flags.
+   - The `enrichSeriesWithChapterData` function might be returning empty results if chapters are missing, as only 1 out of 4 series has chapters.
+   - **Diagnosis**: The mismatch between string "true" and boolean true in the database is a primary suspect for the display issue.
 
-2. **Authentication (Sign-in/Sign-up)**:
-   - User reports being unable to sign in even with the correct credentials.
-   - Node.js app has an internal HTTP to HTTPS redirect that uses `req.secure`. Behind Nginx, this requires `X-Forwarded-Proto`.
-   - Nginx is configured to pass `X-Forwarded-Proto`, but the Node.js app's redirect might be causing a loop or issues if not handled correctly.
-   - CSRF token errors (`ForbiddenError: invalid csrf token`) are seen in logs. This is likely due to the `csrf-csrf` configuration or how the frontend sends the token.
+2. **Authentication & CSRF**:
+   - CSRF token errors (`ForbiddenError: invalid csrf token`) are prevalent.
+   - The `doubleCsrf` configuration uses `secure: true` in production. If the request is not detected as secure, the cookie won't be sent.
+   - `app.set('trust proxy', 1)` is configured, but the internal HTTPS redirect middleware might still be causing issues if `req.secure` is not correctly set.
+   - **Diagnosis**: The combination of `trust proxy` settings, Nginx headers, and `csrf-csrf` secure cookie requirements is likely causing the authentication failures.
 
-3. **HTTPS Redirect Conflict**:
-   - Both Nginx and the Node.js app are trying to handle HTTPS redirects. This can lead to redirect loops.
+3. **HTTPS Redirect Loop**:
+   - Both Nginx and the Node.js app handle redirects.
+   - The Node.js app's redirect logic uses `req.secure`, which depends on `X-Forwarded-Proto` from Nginx.
 
 ### Actions Taken
-- Verified VPS connectivity and project structure.
-- Inspected database schema and content.
-- Reviewed reference app code from Replit.
-- Checked Nginx and systemd service configurations.
+- Verified database content and flag types.
+- Analyzed CSRF and session middleware configuration.
+- Compared VPS code with Replit reference code.
+- Identified potential issues in `storage.ts` flag matching and `index.ts` redirect logic.
 
 ### Next Steps
-- Fix the HTTPS redirect logic to prevent loops and ensure `req.secure` is reliable.
-- Debug the CSRF issue by checking how the token is generated and validated.
-- Investigate why manga aren't showing despite being in the database and API returning 200.
+- **Fix 1**: Update `storage.ts` to handle both string and boolean values for section flags.
+- **Fix 2**: Refine the HTTPS redirect middleware to be more robust or rely entirely on Nginx.
+- **Fix 3**: Debug CSRF by logging token generation and validation states.
