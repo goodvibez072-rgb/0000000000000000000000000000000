@@ -21,12 +21,18 @@
      - Changed CSRF cookie `sameSite` from "strict" to "lax" in `routes.ts`.
    - **Verification**: Rebuilt and restarted service.
 
-3. **HTTPS Redirect Loop (INVESTIGATED)**:
+3. **Admin Login (FIXED)**:
+   - **Issue**: User reported being unable to log in to the admin account.
+   - **Fix**: Created and executed a `fix-admin.ts` script that explicitly updates the `admin` user with the provided credentials (`goodvibez072@gmail.com` / `Manga@Site2024!Secure99`), ensures `isAdmin: 'true'`, and sets the role to `owner`.
+   - **Verification**: Script executed successfully.
+
+4. **HTTPS Redirect Loop (INVESTIGATED)**:
    - **Status**: The `trust proxy: true` setting should now allow `req.secure` to correctly identify HTTPS requests from Nginx, preventing unnecessary internal redirects if Nginx already handled it.
 
 ### Actions Taken
 - Verified database content and flag types.
 - Applied code fixes to `storage.ts`, `index.ts`, `replitAuth.ts`, and `routes.ts`.
+- Executed `fix-admin.ts` to restore admin access.
 - Performed a full rebuild of the project on the VPS.
 - Restarted the `amurscans` service and verified health.
 
