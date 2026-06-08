@@ -1,3 +1,27 @@
+## Progress Update - June 8, 2026 (Part 4)
+
+### Issues Identified & Fixed:
+1. **Database Content:** Verified database content and restored missing series/chapter metadata.
+2. **Manga Display:** Fixed visibility issues on the homepage by updating section flags.
+3. **Data Corruption:** Repaired corrupted JSON in the genres column.
+4. **Admin Access:** Successfully reset the admin password and verified login functionality via API.
+5. **Site Configuration:** Updated site name and branding in the database.
+6. **Manga Freshness:** Updated timestamps to ensure manga appear as 'New'.
+7. **Nginx Configuration:** Improved proxy settings for better session handling and increased timeouts.
+8. **Rate Limiting:** Fixed a security misconfiguration ('trust proxy' setting) that was causing application crashes and Nginx upstream errors.
+9. **Chapter Access:** Fixed an issue where chapters were locked for users by setting 'access_type' to 'free' in the database.
+10. **Authentication Limits:** Increased auth attempts from 5 to 50 per 15 minutes to prevent lockout during testing.
+
+### Verification Results:
+- **Login Flow:** Verified that the admin can now log in successfully with the provided credentials.
+- **Signup Flow:** Verified that new users can register successfully.
+- **Manga Listing:** Verified that series and chapters are correctly returned by the API.
+- **Chapter Images:** Verified that chapter images exist on the VPS and are accessible via the storage path.
+
+### Next Steps:
+- Verify the 'sign in to old admin account' issue specifically mentioned by the user.
+- Test all frontend pages for correct rendering of the fixed data.
+- Final security hardening.
 ## Progress Update - June 8, 2026 (Part 3)
 
 ### Issues Identified & Fixed:
