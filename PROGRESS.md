@@ -12,7 +12,7 @@
 1. **Manga Display (FIXED)**:
    - **Issue**: Mismatch between string "true" and boolean true in the database for section flags.
    - **Fix**: Updated `storage.ts` to handle both string and boolean values.
-   - **Verification**: API endpoints (`/api/sections/featured`, etc.) now return the expected manga data.
+   - **Verification**: Verified via `curl` that `/api/sections/featured`, `/api/sections/trending`, `/api/sections/popular-today`, `/api/sections/latest-updates`, and `/api/sections/pinned` all return manga data.
 
 2. **Authentication & CSRF (FIXED)**:
    - **Issue**: CSRF token errors and session detection issues due to restrictive `trust proxy` and `sameSite` settings.
@@ -35,4 +35,3 @@
 - **End-to-end Testing**: Manually verify sign-in and sign-up through the browser.
 - **Feature Audit**: Check all pages and endpoints for errors.
 - **Security Hardening**: Ensure all endpoints are properly protected.
-- **Data Seeding**: Add more sample manga data if needed for testing.
