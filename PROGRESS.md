@@ -35,3 +35,4 @@
 - **End-to-end Testing**: Manually verify sign-in and sign-up through the browser.
 - **Feature Audit**: Check all pages and endpoints for errors.
 - **Security Hardening**: Ensure all endpoints are properly protected.
+- **Data Seeding**: Add more sample manga data if needed for testing.
