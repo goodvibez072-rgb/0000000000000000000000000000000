@@ -1,37 +1,35 @@
 # Progress Report - Manga Website Restoration
 
-## Initial Assessment (June 7, 2026)
+## Initial Assessment (June 8, 2026)
 
 ### Status of Services
 - **Web Server**: Node.js application is running on port 3000.
 - **Database**: SQLite database found at `/var/www/amurscans/data/database.db`.
-- **Environment**: The application seems to be running from `/var/www/amurscans` (based on logs) or `/home/amurscans/tmp`.
+- **Nginx**: Configured as a reverse proxy, but has its own HTTPS redirect which might conflict with the Node.js app's internal redirect.
+- **Manga Data**: 4 entries found in the `series` table. All have `true` for section flags (`is_featured`, etc.).
 
 ### Issues Identified
-1. **Manga Display**: 
-   - The database contains a `series` table instead of a `manga` table.
-   - There are 4 entries in the `series` table.
-   - Logs show successful GET requests to `/api/sections/...` returning data, but the user reports no mangas are showing.
-2. **Admin Login**:
-   - Logs show `ForbiddenError: invalid csrf token` and `400 Username or email and password are required`.
-   - A successful login was recorded at `3:47:21 AM`, but the user reports being unable to sign in.
-   - The `.env` file specifies `ADMIN_USERNAME=admin` and `ADMIN_PASSWORD=Manga@Site2024!Secure99`.
-3. **Database Schema**:
-   - The application might be expecting a different schema or table names (e.g., `manga` vs `series`).
-   - The `sqlite3` check failed when looking for a `manga` table.
+1. **Manga Display**:
+   - The database contains a `series` table with 4 entries.
+   - The application expects `is_featured = "true"` (string) but the database might be returning booleans or the frontend might not be receiving them correctly.
+   - Logs show successful GET requests to `/api/sections/...` but the user reports no mangas are showing.
 
-### Actions Taken (Updated June 7, 2026)
-- **Admin Password Reset**: Successfully reset the admin password to `Manga@Site2024!Secure99` and ensured the account has `owner` role and `isAdmin: 'true'`.
-- **Database Schema Audit**: Confirmed the database uses a `series` table (not `manga`). Found 4 series entries.
-- **Chapter Verification**: Confirmed at least one series has chapters in the database.
-- **Service Status**: Verified `amurscans.service` is running via systemd.
-- **CSRF Issue**: Identified CSRF token errors in logs which might be affecting logins from certain environments.
+2. **Authentication (Sign-in/Sign-up)**:
+   - User reports being unable to sign in even with the correct credentials.
+   - Node.js app has an internal HTTP to HTTPS redirect that uses `req.secure`. Behind Nginx, this requires `X-Forwarded-Proto`.
+   - Nginx is configured to pass `X-Forwarded-Proto`, but the Node.js app's redirect might be causing a loop or issues if not handled correctly.
+   - CSRF token errors (`ForbiddenError: invalid csrf token`) are seen in logs. This is likely due to the `csrf-csrf` configuration or how the frontend sends the token.
 
-### Issues Identified & Resolved
-1. **Admin Login**: Reset password via custom script. Verified user exists with correct role.
-2. **Manga Display (In Progress)**: API returns data, but frontend might be failing to render or expecting different flags.
+3. **HTTPS Redirect Conflict**:
+   - Both Nginx and the Node.js app are trying to handle HTTPS redirects. This can lead to redirect loops.
+
+### Actions Taken
+- Verified VPS connectivity and project structure.
+- Inspected database schema and content.
+- Reviewed reference app code from Replit.
+- Checked Nginx and systemd service configurations.
 
 ### Next Steps
-- Fix the manga display issue by checking the flag matching (string vs boolean) in `storage.ts`.
-- Restart the service to apply any configuration changes.
-- Perform a full audit of all API endpoints.
+- Fix the HTTPS redirect logic to prevent loops and ensure `req.secure` is reliable.
+- Debug the CSRF issue by checking how the token is generated and validated.
+- Investigate why manga aren't showing despite being in the database and API returning 200.
