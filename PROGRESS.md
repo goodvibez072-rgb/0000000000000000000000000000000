@@ -1,3 +1,23 @@
+## Progress Update - June 8, 2026 (Part 2)
+
+### Issues Identified & Fixed:
+1. **Database Content:** Verified database content and restored missing series/chapter metadata.
+2. **Manga Display:** Fixed visibility issues on the homepage by updating section flags.
+3. **Data Corruption:** Repaired corrupted JSON in the genres column.
+4. **Admin Access:** Successfully reset the admin password.
+5. **Site Configuration:** Updated site name and branding in the database.
+6. **Manga Freshness:** Updated timestamps to ensure manga appear as 'New'.
+7. **Nginx Configuration:** Improved proxy settings for better session handling and increased timeouts.
+8. **Rate Limiting:** Fixed a security misconfiguration ('trust proxy' setting) that was causing application crashes and Nginx upstream errors.
+
+### Ongoing Investigations:
+- **Session Persistence:** Monitoring session stability after the rate limiting fix.
+- **Login Flow:** Verified that /api/csrf-token is now working correctly.
+
+### Next Steps:
+- Perform full end-to-end testing of the login and sign-up flows.
+- Verify that manga chapters are loading correctly.
+- Conduct a security audit of all endpoints.
 ## Progress Update - June 8, 2026
 
 ### Issues Identified & Fixed:
