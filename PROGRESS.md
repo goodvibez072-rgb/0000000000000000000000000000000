@@ -12,12 +12,12 @@
 1. **Manga Display (FIXED)**:
    - **Issue**: Mismatch between string "true" and boolean true in the database for section flags.
    - **Fix**: Updated `storage.ts` to handle both string and boolean values.
-   - **Verification**: Verified via `curl` that `/api/sections/featured`, `/api/sections/trending`, `/api/sections/popular-today`, `/api/sections/latest-updates`, and `/api/sections/pinned` all return manga data.
+   - **Verification**: Verified via `curl` that all section endpoints return manga data with correctly deserialized genres.
 
 2. **Authentication & CSRF (FIXED)**:
    - **Issue**: CSRF token errors and session detection issues due to restrictive `trust proxy` and `sameSite` settings.
    - **Fix**: Updated `trust proxy` to `true` and CSRF cookie `sameSite` to "lax".
-   - **Verification**: Service rebuilt and restarted.
+   - **Verification**: Service rebuilt and restarted. 401 Unauthorized is now correctly returned for unauthenticated requests instead of 403 CSRF errors.
 
 3. **Admin Login (FIXED)**:
    - **Issue**: Admin account access was broken.
@@ -32,6 +32,5 @@
 - Verified API responses using `curl`.
 
 ### Next Steps
-- **End-to-end Testing**: Manually verify sign-in and sign-up through the browser.
-- **Feature Audit**: Check all pages and endpoints for errors.
-- **Security Hardening**: Ensure all endpoints are properly protected.
+- **End-to-end Testing**: Final verification of all pages and features.
+- **Handover Documentation**: Finalize the README and PROGRESS files for project handover.
