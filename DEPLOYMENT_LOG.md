@@ -110,3 +110,13 @@ This document tracks the deployment process, issues encountered, and solutions a
 ### 5. Document all findings, issues, and actions taken, then push documentation to GitHub
 - **Action**: This log is being updated and will be pushed to GitHub.
 - **Issues Faced**: None during the cleanup process. The previous agent's documentation was very helpful in understanding the environment and identifying files for removal.
+
+### 6. Extract and Upload Clean Website Zip
+- **Action**: Created a clean archive of the website from `/var/www/amurscans` (excluding `node_modules` and `.git` directories) and uploaded it to the GitHub repository.
+- **Details**:
+    - Initially attempted to use `zip` on the VPS, but it was not installed. Switched to `tar -czf`.
+    - Created `clean_current_website.tar.gz` in `/home/amurscans` on the VPS.
+    - Downloaded `clean_current_website.tar.gz` to the sandbox.
+    - Converted `clean_current_website.tar.gz` to `clean_current_website.zip` in the sandbox.
+    - Uploaded `clean_current_website.zip` to the GitHub repository under the name `clean_current_website.zip`.
+- **Result**: A clean, dependency-free archive of the website is now available in the GitHub repository.
