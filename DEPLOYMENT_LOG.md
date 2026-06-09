@@ -1,16 +1,16 @@
 # AmourScans VPS Deployment Log
 
-This document tracks the deployment process, issues encountered, and solutions applied during the migration to the FlokiNET VPS.
+This document tracks the deployment process, issues encountered, and solutions applied during the migration to the FlokiNET VPS, and subsequent cleanup.
 
 ## Deployment Details
-- **Date**: 2026-06-07
+- **Date**: 2026-06-07 (Initial Deployment), 2026-06-09 (Cleanup)
 - **Target VPS**: 185.146.232.253
 - **SSH User**: amurscans
 - **GitHub Repository**: `goodvibez072-rgb/0000000000000000000000000000000`
 
 ---
 
-## 🛠️ Progress Log
+## 🛠️ Progress Log (Previous Agent)
 
 ### 1. Preparation & Repository Sync
 - Cloned the repository to inspect the package.
@@ -69,6 +69,44 @@ This document tracks the deployment process, issues encountered, and solutions a
 - **Domain**: amurscans.com
 - **Cloudflare**: Verified that amurscans.com is resolving to Cloudflare IPs and the site is accessible via HTTPS.
 - **Nginx Configuration**: Confirmed Nginx is correctly configured as a reverse proxy for the Node.js backend on port 3000 and serving static files from `/var/www/amurscans/dist/public`.
-- **SSL**: SSL is managed on the VPS via Let's Encrypt, which is compatible with Cloudflare's 'Full' or 'Full (Strict)' SSL settings.
+- **SSL**: SSL is managed on the VPS via Let\'s Encrypt, which is compatible with Cloudflare\'s \'Full\' or \'Full (Strict)\' SSL settings.
 - **System Health**: The application is running stably, serving API requests and static content without errors.
 
+---
+
+## 🛠️ Progress Log (Current Agent - 2026-06-09)
+
+### 1. Audit VPS: SSH in and assess current file structure, disk usage, and running services
+- **Action**: Connected to VPS via SSH and performed initial audit.
+- **Findings**:
+    - Initial disk usage in `/home/amurscans` was 3.9GB, with several large backup directories and archive files.
+    - The manga website is running from `/var/www/amurscans` (687MB).
+    - A Node.js process (PID 717) is running from `/var/www/amurscans`.
+    - Nginx is running as a reverse proxy.
+
+### 2. Review GitHub repository to understand the intended website structure and previous agent work
+- **Action**: Reviewed `HANDOVER.md`, `DEPLOYMENT_LOG.md`, `PROGRESS.md`, and `agents.md` from the GitHub repository.
+- **Findings**:
+    - The website was successfully deployed and verified by the previous agent.
+    - The primary website content is expected to be in `/var/www/amurscans`.
+    - The previous agent created several backups in `/home/amurscans`.
+
+### 3. Plan and execute cleanup: remove backups, old versions, and unnecessary files while preserving the live website and dependencies
+- **Action**: Removed unnecessary files and directories from `/home/amurscans` and `/var/www/amurscans`.
+- **Details**:
+    - Removed backup directories: `/home/amurscans/amurscans_backup_20260605_145837`, `/home/amurscans/amurscans_backup_before_new_deploy`, `/home/amurscans/amurscans_backup_manual`, `/home/amurscans/new_deploy`, `/home/amurscans/tar_fixed_extract`, `/home/amurscans/zip_extract`.
+    - Removed temporary files: `/home/amurscans/tmp/*`.
+    - Removed backup archive files: `/home/amurscans/amourscans_ready.zip`, `/home/amurscans/amurscans-vps-fixed.tar.gz`, `/home/amurscans/amurscans-vps-new.tar.gz`, `/home/amurscans/amurscans-vps.tar.gz`, `/home/amurscans/database_backup_*.db`.
+    - Removed large archives and unnecessary files from the web root: `/var/www/amurscans/amurscans-vps-fixed.tar.gz`, `/var/www/amurscans/amurscans-vps.tar.gz`, `/var/www/amurscans/zipFile.zip`, `/var/www/amurscans/cans -e`.
+    - Cleaned npm cache: `npm cache clean --force`.
+- **Result**: Disk usage in `/home/amurscans` reduced from 3.9GB to 713MB. `/var/www/amurscans` is now 628MB.
+
+### 4. Verify the website is running correctly after cleanup
+- **Action**: Verified the website functionality after cleanup.
+- **Result**:
+    - The Node.js application is still running and serving content (confirmed by `curl http://localhost:3000/api/sections/featured` returning 4 manga entries).
+    - The `amurscans.service` is active and running.
+
+### 5. Document all findings, issues, and actions taken, then push documentation to GitHub
+- **Action**: This log is being updated and will be pushed to GitHub.
+- **Issues Faced**: None during the cleanup process. The previous agent's documentation was very helpful in understanding the environment and identifying files for removal.
